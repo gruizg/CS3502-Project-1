@@ -21,7 +21,6 @@ public:
     void refund(Customer c);
     [[nodiscard]] double getBalance() const;
 
-
     void runStore();
 };
 

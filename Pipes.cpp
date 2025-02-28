@@ -4,7 +4,7 @@
 #include <cstring>
 
 int main() {
-    int pipefd[2];  
+    int pipefd[2];  //creates pipe with read and write end
     pid_t pid;
 
     if (pipe(pipefd) == -1) {
@@ -12,6 +12,8 @@ int main() {
         return 1;
     }
 
+    //creates child process and executes 1s comand
+    
     pid = fork(); 
 
     if (pid < 0) {
@@ -19,7 +21,7 @@ int main() {
         return 1;
     }
 
-    if (pid == 0) {  
+    if (pid == 0) {  //Execution of process, reading file numbers
         
         close(pipefd[0]); 
 
@@ -31,13 +33,13 @@ int main() {
         return 1;
     } else {
         
-        close(pipefd[1]); 
+        close(pipefd[1]); //Close write end of pipe
 
         char buffer[1024];
         int bytesRead;
         int fileCount = 0;
 
-        while ((bytesRead = read(pipefd[0], buffer, sizeof(buffer) - 1)) > 0) {
+        while ((bytesRead = read(pipefd[0], buffer, sizeof(buffer) - 1)) > 0) { //Counting files and \n entries
             buffer[bytesRead] = '\0';
             std::cout << "Received Data:\n" << buffer; 
 
@@ -47,10 +49,10 @@ int main() {
             }
         }
 
-        close(pipefd[0]); 
+        close(pipefd[0]); //Close read and wait for child to finish process execution
         wait(NULL); 
 
-        std::cout << "\nTotal Files/Folders: " << fileCount << "\n";
+        std::cout << "\nTotal Files/Folders: " << fileCount << "\n"; //Display all files found
     }
 
     return 0;

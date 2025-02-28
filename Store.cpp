@@ -27,12 +27,12 @@ double Store::getBalance() const {
     return storeBalance;
 }
 
-void Store::runStore() {
+void Store::runStore(int phase) {
     std::cout << "Store balance : " << storeBalance << "\n";
     std::vector<std::thread> lines;
 
     for (auto& line : checkoutLines) {
-       lines.emplace_back(&CheckoutLine::processCustomers, &line, std::ref(*this));
+        lines.emplace_back(&CheckoutLine::processCustomers, &line, std::ref(*this), phase);
     }
 
     for (auto& t : lines) {

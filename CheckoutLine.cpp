@@ -8,13 +8,11 @@
 #include <iostream>
 #include <random>
 #include <mutex>
-#include <thread>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
 
-std::mutex mutexA;
-std::mutex mutexB;
+std::mutex transactionMutex;
 
 int CheckoutLine::nextId = 1;
 

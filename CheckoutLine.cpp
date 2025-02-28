@@ -43,17 +43,18 @@ void CheckoutLine::processCustomers(Store& s) {
         Customer c = dequeueCustomer();
 
         std::unique_lock transactionLock(transactionMutex);
+        
         if (c.getIsReturn()) {
             s.refund(c);
         }
         else {
             s.purchase(c);
         }
+        
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance() << "\n";
     }
 }
-
 
 bool CheckoutLine::hasCustomers() const {
     return !customers.empty();

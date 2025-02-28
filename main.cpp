@@ -2,7 +2,7 @@
 Driver class to run simulation of a store. Store consists of customers that are processed through checkout lines.
 */
 
-#include <iostream>
+#include <iostream>//IO and Store class
 #include "Store.h"
 
 int main() {

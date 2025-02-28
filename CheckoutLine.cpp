@@ -44,8 +44,6 @@ void CheckoutLine::processCustomers(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
-        std::unique_lock transactionLock(transactionMutex);
-        
         if (c.getIsReturn()) {
             s.refund(c);
         }

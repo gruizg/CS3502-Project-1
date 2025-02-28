@@ -2,32 +2,32 @@
 // Created by Geshlee Ruiz on 2/20/25.
 //
 
-#include "Store.h"
+#include "Store.h" //Include class
 
-#include <iostream>
-#include <thread>
+#include <iostream> //IO and Threads
+#include <thread> 
 
-double Store::storeBalance = 10000;
+double Store::storeBalance = 10000; //Starting store balance
 
-Store::Store(int numLines) {
+Store::Store(int numLines) { //Creates checkout lines
     for (int i = 0; i < numLines;i++) {
         checkoutLines.emplace_back();
     }
 }
 
-void Store::purchase(Customer c) {
+void Store::purchase(Customer c) { //Adds to balance after a purchase
     storeBalance += c.getPrice();
 }
 
-void Store::refund(Customer c) {
+void Store::refund(Customer c) { //Subtracts from balance after refund
     storeBalance -= c.getPrice();
 }
 
-double Store::getBalance() const {
+double Store::getBalance() const { //Returns the balance
     return storeBalance;
 }
 
-void Store::runStore(int phase) {
+void Store::runStore(int phase) { //Passes the lines to threads and begins
     std::cout << "Store balance : " << storeBalance << "\n";
     std::vector<std::thread> lines;
 

@@ -12,6 +12,7 @@ static std::mt19937 gen(ran());
 Customer::Customer() {
     std::uniform_int_distribution<int> itemDist(0,8);
     std::uniform_int_distribution<int> returnDist(0,1);
+    
     itemNumber = itemDist(gen);
     itemPrice = storePrices[itemNumber];
     isReturn = returnDist(gen);

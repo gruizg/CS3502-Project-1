@@ -18,6 +18,7 @@ Store::Store(int numLines) {
 void Store::purchase(Customer c) {
     storeBalance += c.getPrice();
 }
+
 void Store::refund(Customer c) {
     storeBalance -= c.getPrice();
 }

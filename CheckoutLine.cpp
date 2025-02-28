@@ -75,7 +75,6 @@ void CheckoutLine::processCustomers(Store& s) {
     }
 }
 
-
 bool CheckoutLine::hasCustomers() const {
     return !customers.empty();
 }
@@ -88,5 +87,3 @@ std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
 }
-
-

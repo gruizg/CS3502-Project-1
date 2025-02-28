@@ -8,13 +8,13 @@
 #include <iostream>
 #include <random>
 #include <mutex>
+#include <thread>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
 
 std::mutex mutexA;
 std::mutex mutexB;
-std::mutex printMutex;
 
 int CheckoutLine::nextId = 1;
 
@@ -48,7 +48,8 @@ void CheckoutLine::processCustomers(Store& s) {
         
         if (c.getIsReturn()) {
             s.refund(c);
-        } else {
+        }
+        else {
             s.purchase(c);
         }
         

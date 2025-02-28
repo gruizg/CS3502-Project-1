@@ -18,6 +18,7 @@ Store::Store(int numLines) {
 void Store::purchase(Customer c) {
     storeBalance += c.getPrice();
 }
+
 void Store::refund(Customer c) {
     storeBalance -= c.getPrice();
 }
@@ -29,7 +30,7 @@ double Store::getBalance() const {
 void Store::runStore() {
     std::cout << "Store balance : " << storeBalance << "\n";
     std::vector<std::thread> lines;
-    
+
     for (auto& line : checkoutLines) {
        lines.emplace_back(&CheckoutLine::processCustomers, &line, std::ref(*this));
     }

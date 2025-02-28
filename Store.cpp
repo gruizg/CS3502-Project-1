@@ -27,9 +27,9 @@ double Store::getBalance() const {
 }
 
 void Store::runStore() {
-    std::vector<std::thread> lines;
-
     std::cout << "Store balance : " << storeBalance << "\n";
+    std::vector<std::thread> lines;
+    
     for (auto& line : checkoutLines) {
        lines.emplace_back(&CheckoutLine::processCustomers, &line, std::ref(*this));
     }
@@ -40,8 +40,3 @@ void Store::runStore() {
         }
     }
 }
-
-
-
-
-

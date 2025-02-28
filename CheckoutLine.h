@@ -4,7 +4,9 @@
 
 #ifndef CHECKOUTLINE_H
 #define CHECKOUTLINE_H
+
 #include "Customer.h"
+
 #include <queue>
 
 class Store;

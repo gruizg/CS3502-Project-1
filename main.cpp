@@ -18,5 +18,6 @@ int main() {
     //Create store and call method to run store simulation
     Store myStore(lines);
     myStore.runStore();
+    
     return 0;
 }

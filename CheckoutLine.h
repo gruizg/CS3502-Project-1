@@ -7,9 +7,9 @@
 
 #include "Customer.h"
 
-#include <queue>
+#include <queue> //Uses queue to simulate a checkout line
 
-class Store;
+class Store; //uses store methods to process
 
 class CheckoutLine {
 private:

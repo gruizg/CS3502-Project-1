@@ -4,6 +4,7 @@
 
 #ifndef STORE_H
 #define STORE_H
+
 #include "Customer.h"
 #include "CheckoutLine.h"
 

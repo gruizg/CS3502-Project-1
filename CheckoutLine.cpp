@@ -7,9 +7,14 @@
 
 #include <iostream>
 #include <random>
+#include <mutex>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
+
+std::mutex mutexA;
+std::mutex mutexB;
+std::mutex printMutex;
 
 int CheckoutLine::nextId = 1;
 
@@ -38,19 +43,18 @@ Customer CheckoutLine::dequeueCustomer() {
 void CheckoutLine::processCustomers(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
-        
+
         if (c.getIsReturn()) {
             s.refund(c);
-        }
-        else {
+        } else {
             s.purchase(c);
         }
         
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance() << "\n";
+
     }
 }
-
 
 bool CheckoutLine::hasCustomers() const {
     return !customers.empty();
@@ -64,5 +68,3 @@ std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
 }
-
-

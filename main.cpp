@@ -6,7 +6,7 @@ Driver class to run simulation of a store. Store consists of customers that are 
 #include "Store.h"
 
 int main() {
-    
+
     //Implements user input to allow test cases with different numbers of checkout lines
     int lines;
     std::cout << "Department Store Simulator\n";
@@ -18,6 +18,6 @@ int main() {
     //Create store and call method to run store simulation
     Store myStore(lines);
     myStore.runStore();
-    
+
     return 0;
 }

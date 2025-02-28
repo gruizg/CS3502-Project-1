@@ -8,11 +8,13 @@
 #include <iostream>
 #include <random>
 #include <mutex>
+#include <thread>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
 
-std::mutex transactionMutex;
+std::mutex mutexA;
+std::mutex mutexB;
 
 int CheckoutLine::nextId = 1;
 
@@ -42,15 +44,20 @@ void CheckoutLine::processCustomers(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
-        std::unique_lock transactionLock(transactionMutex);
         if (c.getIsReturn()) {
+            std::unique_lock<std::mutex> lock1(mutexA);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::unique_lock<std::mutex> lock2(mutexB);
             s.refund(c);
         }
         else {
+            std::unique_lock<std::mutex> lock2(mutexB);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::unique_lock<std::mutex> lock1(mutexA);
             s.purchase(c);
         }
         std::cout << "Processing line " << getId() << " " << c << "\n";
-        std::cout << "Store Balance: " << s.getBalance() << "\n";
+        std::cout << "Store Balance: " << s.getBalance();
     }
 }
 

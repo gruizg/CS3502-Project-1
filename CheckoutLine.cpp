@@ -7,14 +7,9 @@
 
 #include <iostream>
 #include <random>
-#include <mutex>
-#include <thread>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
-
-std::mutex mutexA;
-std::mutex mutexB;
 
 int CheckoutLine::nextId = 1;
 
@@ -31,6 +26,7 @@ CheckoutLine::CheckoutLine() {
 }
 
 Customer CheckoutLine::dequeueCustomer() {
+    
     if (customers.empty()) {
         throw std::runtime_error("Line is empty");
     }
@@ -41,6 +37,7 @@ Customer CheckoutLine::dequeueCustomer() {
 }
 
 void CheckoutLine::processCustomers(Store& s) {
+    
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 

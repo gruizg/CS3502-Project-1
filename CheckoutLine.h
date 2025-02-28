@@ -22,7 +22,11 @@ public:
 
     Customer dequeueCustomer();
 
-    void processCustomers(Store& s);
+    void processCustomers(Store& s, int phase);
+    void phase1(Store& s);
+    void phase2(Store& s);
+    void phase3(Store& s);
+    void phase4(Store& s);
     [[nodiscard]] bool hasCustomers() const;
     [[nodiscard]] int getId() const;
 
@@ -33,3 +37,4 @@ public:
 
 
 #endif //CHECKOUTLINE_H
+

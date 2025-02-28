@@ -7,9 +7,12 @@
 
 #include <iostream>
 #include <random>
+#include <mutex>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
+
+std::mutex transactionMutex;
 
 int CheckoutLine::nextId = 1;
 
@@ -38,6 +41,8 @@ Customer CheckoutLine::dequeueCustomer() {
 void CheckoutLine::processCustomers(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
+
+        std::unique_lock transactionLock(transactionMutex);
         if (c.getIsReturn()) {
             s.refund(c);
         }

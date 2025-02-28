@@ -38,12 +38,14 @@ Customer CheckoutLine::dequeueCustomer() {
 void CheckoutLine::processCustomers(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
+        
         if (c.getIsReturn()) {
             s.refund(c);
         }
         else {
             s.purchase(c);
         }
+        
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance() << "\n";
     }

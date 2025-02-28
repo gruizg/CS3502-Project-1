@@ -19,6 +19,7 @@ CheckoutLine::CheckoutLine() {
 
     std::uniform_int_distribution<int> customerDist(2,5);
     int size = customerDist(gen);
+
     for (int i = 0; i < size; i++) {
         customers.push(Customer());
     }
@@ -84,6 +85,7 @@ std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
 }
+
     for (int i = 0; i < size; i++) {
         customers.push(Customer());
     }

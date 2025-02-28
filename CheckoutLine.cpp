@@ -7,9 +7,16 @@
 
 #include <iostream>
 #include <random>
+#include <mutex>
+#include <thread>
 
 static std::random_device ran;
 static std::mt19937 gen(ran());
+
+std::mutex transactionMutex;
+std::mutex mutexA;
+std::mutex mutexB;
+std::mutex printMutex;
 
 int CheckoutLine::nextId = 1;
 
@@ -19,7 +26,6 @@ CheckoutLine::CheckoutLine() {
 
     std::uniform_int_distribution<int> customerDist(2,5);
     int size = customerDist(gen);
-
     for (int i = 0; i < size; i++) {
         customers.push(Customer());
     }
@@ -27,7 +33,6 @@ CheckoutLine::CheckoutLine() {
 }
 
 Customer CheckoutLine::dequeueCustomer() {
-    
     if (customers.empty()) {
         throw std::runtime_error("Line is empty");
     }
@@ -37,8 +42,82 @@ Customer CheckoutLine::dequeueCustomer() {
     return c;
 }
 
-void CheckoutLine::processCustomers(Store& s) {
-    
+void CheckoutLine::processCustomers(Store& s, int phase) {
+
+    Store mystore = s;
+    switch (phase) {
+        case 1:
+            phase1(s);
+        break;
+        case 2:
+            phase2(s);
+        break;
+        case 3:
+            phase3(s);
+        break;
+        case 4:
+            phase4(s);
+        break;
+    }
+
+}
+void CheckoutLine::phase1(Store& s) {
+    while (hasCustomers()) {
+        Customer c = dequeueCustomer();
+
+        if (c.getIsReturn()) {
+            s.refund(c);
+        }
+        else {
+            s.purchase(c);
+        }
+
+        std::cout << "Processing line " << getId() << " " << c << "\n";
+        std::cout << "Store Balance: " << s.getBalance() << "\n";
+    }
+}
+void CheckoutLine::phase2(Store& s) {
+    while (hasCustomers()) {
+        Customer c = dequeueCustomer();
+
+        std::unique_lock<std::mutex> transactionLock(transactionMutex);
+
+        if (c.getIsReturn()) {
+            s.refund(c);
+        }
+        else {
+            s.purchase(c);
+        }
+
+        std::cout << "Processing line " << getId() << " " << c << "\n";
+        std::cout << "Store Balance: " << s.getBalance() << "\n";
+
+    }
+}
+void CheckoutLine::phase3(Store& s) {
+    while (hasCustomers()) {
+        Customer c = dequeueCustomer();
+
+        if (c.getIsReturn()) {
+
+            std::unique_lock<std::mutex> lock1(mutexA);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::unique_lock<std::mutex> lock2(mutexB);
+            s.refund(c);
+        }
+        else {
+            std::unique_lock<std::mutex> lock2(mutexB);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::unique_lock<std::mutex> lock1(mutexA);
+            s.purchase(c);
+        }
+
+        std::cout << "Processing line " << getId() << " " << c << "\n";
+        std::cout << "Store Balance: " << s.getBalance();
+
+    }
+}
+void CheckoutLine::phase4(Store& s) {
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
@@ -84,10 +163,4 @@ int CheckoutLine::getId() const{
 std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
-}
-
-    for (int i = 0; i < size; i++) {
-        customers.push(Customer());
-    }
-
 }

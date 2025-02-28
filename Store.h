@@ -12,7 +12,7 @@
 class Store {
 private:
     static double storeBalance;
-    std::vector<CheckoutLine> checkoutLines;
+    std::vector<CheckoutLine> checkoutLines; //Vector to hold checkout lines
 
 public:
     explicit Store(int numLines);

@@ -6,6 +6,7 @@
 #define CHECKOUTLINE_H
 
 #include "Customer.h"
+
 #include <queue>
 
 class Store;

@@ -5,7 +5,7 @@
 #ifndef STORE_H
 #define STORE_H
 
-#include "Customer.h"
+#include "Customer.h" //Include class files
 #include "CheckoutLine.h"
 
 

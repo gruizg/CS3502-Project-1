@@ -45,6 +45,7 @@ void CheckoutLine::processCustomers(Store& s) {
         Customer c = dequeueCustomer();
 
         if (c.getIsReturn()) {
+
             std::unique_lock<std::mutex> lock1(mutexA);
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             std::unique_lock<std::mutex> lock2(mutexB);
@@ -59,6 +60,7 @@ void CheckoutLine::processCustomers(Store& s) {
         
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance();
+
     }
 }
 
@@ -74,5 +76,3 @@ std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
 }
-
-

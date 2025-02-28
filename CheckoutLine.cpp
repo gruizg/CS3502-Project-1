@@ -56,11 +56,11 @@ void CheckoutLine::processCustomers(Store& s) {
             std::unique_lock<std::mutex> lock1(mutexA);
             s.purchase(c);
         }
+        
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance();
     }
 }
-
 
 bool CheckoutLine::hasCustomers() const {
     return !customers.empty();

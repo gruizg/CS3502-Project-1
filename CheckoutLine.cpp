@@ -12,7 +12,9 @@
 static std::random_device ran;
 static std::mt19937 gen(ran());
 
-std::mutex transactionMutex;
+std::mutex mutexA;
+std::mutex mutexB;
+std::mutex printMutex;
 
 int CheckoutLine::nextId = 1;
 
@@ -46,13 +48,13 @@ void CheckoutLine::processCustomers(Store& s) {
         
         if (c.getIsReturn()) {
             s.refund(c);
-        }
-        else {
+        } else {
             s.purchase(c);
         }
         
         std::cout << "Processing line " << getId() << " " << c << "\n";
         std::cout << "Store Balance: " << s.getBalance() << "\n";
+
     }
 }
 
@@ -68,5 +70,3 @@ std::ostream& operator << (std::ostream& os, const CheckoutLine& cl) {
     os << cl.getId() << " ";
     return os;
 }
-
-

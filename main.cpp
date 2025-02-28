@@ -14,7 +14,7 @@ int main() {
 
     std::cout << "How many lines will your store have? ";
     std::cin >> lines;
-    std::cout << "Which phase to run? (1-4)";
+    std::cout << "Which phase to run? (1-4) ";
     std::cin >>phase;
     std::cout << "Running store...\n";
 

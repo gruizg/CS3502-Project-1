@@ -2,25 +2,25 @@
 // Created by Geshlee Ruiz on 2/20/25.
 //
 
-#include "CheckoutLine.h"
+#include "CheckoutLine.h" //include classes 
 #include "Store.h"
 
-#include <iostream>
+#include <iostream> //IO, Ran generator, Mutexes, Threads
 #include <random>
 #include <mutex>
 #include <thread>
 
-static std::random_device ran;
+static std::random_device ran; //Ran generator
 static std::mt19937 gen(ran());
 
-std::mutex transactionMutex;
-std::mutex mutexA;
+std::mutex transactionMutex; //Mutex for Phase 2
+std::mutex mutexA; //Mutexes for Phase 3
 std::mutex mutexB;
-std::mutex printMutex;
+std::mutex printMutex; //Additional Mutex for Phase 4
 
-int CheckoutLine::nextId = 1;
+int CheckoutLine::nextId = 1; 
 
-CheckoutLine::CheckoutLine() {
+CheckoutLine::CheckoutLine() { //Constructor that generates random # of customers for each line. 
     checkoutLineId = nextId;
     nextId++;
 
@@ -32,7 +32,7 @@ CheckoutLine::CheckoutLine() {
 
 }
 
-Customer CheckoutLine::dequeueCustomer() {
+Customer CheckoutLine::dequeueCustomer() { //Removes customers from lines
     if (customers.empty()) {
         throw std::runtime_error("Line is empty");
     }
@@ -42,7 +42,7 @@ Customer CheckoutLine::dequeueCustomer() {
     return c;
 }
 
-void CheckoutLine::processCustomers(Store& s, int phase) {
+void CheckoutLine::processCustomers(Store& s, int phase) { //Chooses which Phase to run
 
     Store mystore = s;
     switch (phase) {
@@ -61,9 +61,9 @@ void CheckoutLine::processCustomers(Store& s, int phase) {
     }
 
 }
-void CheckoutLine::phase1(Store& s) {
+void CheckoutLine::phase1(Store& s) { //Phase 1 allows any access to increase or decrease store balance
     while (hasCustomers()) {
-        Customer c = dequeueCustomer();
+        Customer c = dequeueCustomer(); //Pulls customer and passes to make a transaction
 
         if (c.getIsReturn()) {
             s.refund(c);
@@ -72,11 +72,11 @@ void CheckoutLine::phase1(Store& s) {
             s.purchase(c);
         }
 
-        std::cout << "Processing line " << getId() << " " << c << "\n";
+        std::cout << "Processing line " << getId() << " " << c << "\n"; //Prints balance status and customer attributes
         std::cout << "Store Balance: " << s.getBalance() << "\n";
     }
 }
-void CheckoutLine::phase2(Store& s) {
+void CheckoutLine::phase2(Store& s) { //Phase 2 mutex locks before every transaction, ensuring only one can adjust the balance at a time.
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
@@ -94,7 +94,7 @@ void CheckoutLine::phase2(Store& s) {
 
     }
 }
-void CheckoutLine::phase3(Store& s) {
+void CheckoutLine::phase3(Store& s) { //Phase 3 creates seperate mutexes for purchase and refund to in theory allow concurrency of a purchase and a refund, rather than one tranaction at a time
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
@@ -117,7 +117,7 @@ void CheckoutLine::phase3(Store& s) {
 
     }
 }
-void CheckoutLine::phase4(Store& s) {
+void CheckoutLine::phase4(Store& s) { //Phase 4 fixes the deadlock by checking lock availability first, if second lock fails ,first is unlocked and yields
     while (hasCustomers()) {
         Customer c = dequeueCustomer();
 
@@ -145,18 +145,18 @@ void CheckoutLine::phase4(Store& s) {
         mutexB.unlock();
 
         {
-            std::lock_guard<std::mutex> printLock(printMutex);
+            std::lock_guard<std::mutex> printLock(printMutex); //Ensures print will complete before the next
             std::cout << "Processing line " << getId() << " " << c << "\n";
             std::cout << "Store Balance: " << s.getBalance() << "\n";
         }
     }
 }
 
-bool CheckoutLine::hasCustomers() const {
+bool CheckoutLine::hasCustomers() const { //Checks there are customers left to process
     return !customers.empty();
 }
 
-int CheckoutLine::getId() const{
+int CheckoutLine::getId() const{ //Gets id of checkout line
     return checkoutLineId;
 }
 

@@ -4,6 +4,7 @@
 
 #ifndef STORE_H
 #define STORE_H
+
 #include "Customer.h"
 #include "CheckoutLine.h"
 
@@ -19,6 +20,7 @@ public:
     void purchase(Customer c);
     void refund(Customer c);
     [[nodiscard]] double getBalance() const;
+
 
     void runStore();
 };
